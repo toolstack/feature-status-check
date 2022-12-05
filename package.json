@@ -1,0 +1,28 @@
+{
+  "name": "plugin-status-check",
+  "version": "1.0.0",
+  "description": "Checks to see if the plugins you have on your site are still supported in the plugin directory.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toolstack/plugin-status-check.git"
+  },
+  "keywords": [
+    "admin",
+    "plugins",
+    "status",
+    "wordpress"
+  ],
+  "author": "Greg Ross",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/toolstack/plugin-status-check/issues"
+  },
+  "homepage": "https://github.com/toolstack/plugin-status-check#readme",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-wp-readme-to-markdown": "^2.1.0"
+  }
+}

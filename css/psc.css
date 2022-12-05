@@ -1,0 +1,65 @@
+.psc_table {
+    border: 0px;
+    border-collapse: collapse;
+    width: auto;
+}
+
+.psc_table th, td {
+    border: 0px;
+    padding: 5px;
+}
+
+.psc_table th {
+    padding: 1em;
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: left;
+}
+
+.psc_table_cell_center_align {
+    text-align: center !important;
+}
+
+.psc_table tr:nth-child(even) {
+            background-color: white;
+        }
+.psc_status_active {
+    background-color: green;
+    color: white;
+}
+
+.psc_status_untested {
+    background-color: yellow;
+    color: black;
+}
+
+.psc_status_closed {
+    background-color: red;
+    color: white;
+}
+
+.psc_status_temp_closed {
+    background-color: red;
+    color: white;
+}
+
+.psc_status_not_found {
+    background-color: transparent;
+    color: black;
+}
+
+.psc_status_out_of_date {
+    background-color: aqua;
+    color: black;
+}
+
+.psc_status_no_data {
+    color: grey;
+}
+
+p.submit {
+    padding-bottom: 0px;
+}
+
