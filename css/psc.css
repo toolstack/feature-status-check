@@ -1,5 +1,6 @@
 .psc_table {
     border: 0px;
+    margin-right: 20px;
     border-collapse: collapse;
     width: auto;
 }
@@ -25,7 +26,8 @@
 .psc_table tr:nth-child(even) {
             background-color: white;
         }
-.psc_status_active {
+
+.psc_status_up_to_date {
     background-color: green;
     color: white;
 }

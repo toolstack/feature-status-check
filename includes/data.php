@@ -38,7 +38,7 @@ function psc_get_plugin_status_transient( $plugins, $no_update = false ) {
 
 		foreach( $plugins as $name => $plugin ) {
 			// Get the slug for the plugin.
-			$slug = dirname( $name );
+			$slug = pcs_get_plugin_slug( $name );
 
 			$psc_wp_org_plugins_status[$name] = psc_get_plugin_status( $slug, $plugin['Version'] );
 		}

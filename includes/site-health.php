@@ -87,21 +87,21 @@ function psc_status_test() {
     // Make the plugin names look pretty and make it a link to the wordpress.org plugin webpage.
     foreach( $untested as $index => $name) {
 		// Get the slug for the plugin.
-		$slug = dirname( $name );
+		$slug = pcs_get_plugin_slug( $name );
 
     	$untested[$index] = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugins[$name]['Name'] . '</a>';
     }
 
     foreach( $closed as $index => $name) {
 		// Get the slug for the plugin.
-		$slug = dirname( $name );
+		$slug = pcs_get_plugin_slug( $name );
 
     	$closed[$index] = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugins[$name]['Name'] . '</a>';
     }
 
     foreach( $temp_closed as $index => $name) {
 		// Get the slug for the plugin.
-		$slug = dirname( $name );
+		$slug = pcs_get_plugin_slug( $name );
 
     	$temp_closed[$index] = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugins[$name]['Name'] . '</a>';
     }

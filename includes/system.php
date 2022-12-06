@@ -46,3 +46,18 @@ function psc_css_and_js( $hook ) {
 	wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', PHC_PLUGIN_FILE ), array(), PHC_VERSION );
 	wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', PHC_PLUGIN_FILE ), array(), PHC_VERSION );
 }
+
+// Gets the slug for a given plugin name.
+function pcs_get_plugin_slug( $name ) {
+    // Most plugins will be in the format "plugin_slug/slug.php", some will be in "plugin_slug/random_name.php" (old pluings mostly),
+    // and a very few will be in the format of "slug.php" (plugins that are a single file and contained in the "plugins" directly only).
+    // There could be edge cases where the directory name isn't the slug, but this is uncommon to say the least.
+    // So let's see if the $name has a directory separator in it, if so, assume the first two formats, if not, just grab the basename.
+    if( str_contains( $name, DIRECTORY_SEPARATOR ) ) {
+        $slug = dirname( $name );
+    } else {
+        $slug = basename( $name, '.php' );
+    }
+
+    return $slug;
+}

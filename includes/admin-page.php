@@ -87,8 +87,8 @@ function psc_display( $no_update = false, $no_title = false ) {
 
 		// Loop through the installed plugins.
 		foreach( $plugins as $name => $plugin ) {
-			// The slug should be the directory name.
-			$slug = dirname( $name );
+			// Get the plugins slug.
+			$slug = pcs_get_plugin_slug( $name );
 
 			// If we don't have data for the plugin, setup so default data.
 			if( ! array_key_exists( $name, $psc_wp_org_plugins_status ) ) {

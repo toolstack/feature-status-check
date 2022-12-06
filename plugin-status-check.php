@@ -19,10 +19,10 @@ This software is released under the GPL v2.0, see license.txt for details
 DEFINE( 'PHC_VERSION', '1.0' );
 DEFINE( 'PHC_PLUGIN_FILE', __FILE__ );
 
-require_once( 'includes/admin-page.php' );
-require_once( 'includes/data.php' );
-require_once( 'includes/site-health.php' );
 require_once( 'includes/system.php' );
+require_once( 'includes/data.php' );
+require_once( 'includes/admin-page.php' );
+require_once( 'includes/site-health.php' );
 
 // Add our menu item to the plugins menu.
 add_action( 'admin_menu', 'psc_admin_menu' );
