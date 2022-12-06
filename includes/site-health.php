@@ -107,9 +107,9 @@ function psc_status_test() {
     }
 
     // Create an unordered list for each status time.
-    $ul_untested  	= count( $untested ) == 0 ? '' : '<h2>' . __( 'Plugins untested in over 3 years' ) . ':</h2><ul><li>' . implode( '</li><li>', $untested ) . '</li></ul>';
-    $ul_closed 		= count( $closed ) == 0 ? '' : '<h2 style="color: orange;">' . __( 'Plugins permanently closed on wordpress.org' ) . ':</h2><ul><li>' . implode( '</li><li>', $closed ) . '</li></ul>';
-    $ul_temp_closed = count( $temp_closed ) == 0 ? '' : '<h2 style="color: red;">' . __( 'Plugins temporarily closed on wordpress.org' ) . ':</h2><ul><li>' . implode( '</li><li>', $temp_closed ) . '</li></ul>';
+    $ul_untested  	= count( $untested ) == 0 ? '' : '<h2 class="psc_site_health_untested">' . __( 'Plugins untested in over 3 years' ) . ':</h2><ul><li>' . implode( '</li><li>', $untested ) . '</li></ul>';
+    $ul_closed 		= count( $closed ) == 0 ? '' : '<h2 class="psc_site_health_closed">' . __( 'Plugins permanently closed on wordpress.org' ) . ':</h2><ul><li>' . implode( '</li><li>', $closed ) . '</li></ul>';
+    $ul_temp_closed = count( $temp_closed ) == 0 ? '' : '<h2 class="psc_site_health_temp_closed">' . __( 'Plugins temporarily closed on wordpress.org' ) . ':</h2><ul><li>' . implode( '</li><li>', $temp_closed ) . '</li></ul>';
 
     // If we have closed/temp_closed items, mark the test critical and red.
     if( count( $closed ) + count( $temp_closed ) > 0 ) {

@@ -61,6 +61,18 @@
     color: grey;
 }
 
+.psc_site_health_untested {
+    color: grey;
+}
+
+.psc_site_health_temp_closed {
+    color: orange;
+}
+
+.psc_site_health_closed {
+    color: red;
+}
+
 p.submit {
     padding-bottom: 0px;
 }
