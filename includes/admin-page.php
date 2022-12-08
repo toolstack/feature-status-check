@@ -96,7 +96,7 @@ function psc_display( $no_update = false, $no_title = false ) {
 			}
 
 			// Construct the class to use for the status cell for this row.
-			$status_class  = 'psc_status_' . esc_attr( $psc_wp_org_plugins_status[$name]['status'] );
+			$status_class  = esc_attr( 'psc_status_' . $psc_wp_org_plugins_status[$name]['status'] );
 
 			// Construct the class to use for the version cell for this row.
 			$version_class = $psc_wp_org_plugins_status[$name]['status'] == 'out_of_date' ? ' class="psc_table_cell_center_align psc_status_out_of_date"' : ' class="psc_table_cell_center_align"';
@@ -127,11 +127,11 @@ function psc_display( $no_update = false, $no_title = false ) {
 
 			// Build the plugin homepage link as well as the author link if we have that data, otherwise return just what we have.
 			if( $psc_wp_org_plugins_status[$name]['status'] != 'not_found' && $psc_wp_org_plugins_status[$name]['status'] != 'no_data' ) {
-				$plugin_link   = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugin['Name'] . '</a>';
-				$plugin_author = '<a target="_blank" href="' . esc_attr( 'https://profiles.wordpress.org/' . $plugin['Author'] ) . '">' . $plugin['Author'] .'</a>';
+				$plugin_link   = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . esc_html( $plugin['Name'] ). '</a>';
+				$plugin_author = '<a target="_blank" href="' . esc_attr( 'https://profiles.wordpress.org/' . esc_html( $plugin['Author'] ) ) . '">' . $plugin['Author'] .'</a>';
 			} else {
-				$plugin_link   = $plugin['Name'];
-				$plugin_author = $plugin['Author'];
+				$plugin_link   = esc_html( $plugin['Name'] );
+				$plugin_author = esc_html( $plugin['Author'] );
 			}
 
 			// Check to see if this plugin is actually active on the site.
@@ -140,13 +140,13 @@ function psc_display( $no_update = false, $no_title = false ) {
 			// Now output the table row.
 			echo '<tr>';
 			echo '<td>' . $plugin_link . '</td>';
-			echo '<td' . $version_class . '>' . $plugin['Version'] . '</td>';
+			echo '<td' . $version_class . '>' . esc_html( $plugin['Version'] ) . '</td>';
 			echo '<td class="psc_table_cell_center_align">' . $plugin_active . '</td>';
 			echo '<td>' . $plugin_author . '</td>';
 			echo '<td class="psc_table_cell_center_align"><a target="_blank" href="' . esc_attr( $plugin['PluginURI'] ) . '">link</a></td>';
 			echo '<td class="psc_table_cell_center_align ' . $status_class . '">' . $friendly_status . '</td>';
-			echo '<td class="psc_table_cell_center_align ' . $status_class . '">' . $psc_wp_org_plugins_status[$name]['last_updated'] . '</td>';
-			echo '<td class="psc_table_cell_center_align ' . $status_class . '">' . $psc_wp_org_plugins_status[$name]['tested_up_to'] . '</td>';
+			echo '<td class="psc_table_cell_center_align ' . $status_class . '">' . esc_html( $psc_wp_org_plugins_status[$name]['last_updated'] ) . '</td>';
+			echo '<td class="psc_table_cell_center_align ' . $status_class . '">' . esc_html( $psc_wp_org_plugins_status[$name]['tested_up_to'] ) . '</td>';
 			echo '</tr>' . PHP_EOL;
 
 		}
