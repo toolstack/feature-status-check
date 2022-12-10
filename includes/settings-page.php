@@ -9,11 +9,20 @@ function pcs_options_page() {
 	// Get the options.
 	$options = get_option( 'plugin_status_check' );
 
+	// Get the next cronjob schedule.
+	$next_cron_job = wp_next_scheduled ( 'psc_daily_event' );
+
+	// Grab the plugin list.
+	$plugins = get_plugins();
+
+	// Retrieve the data without updating it to see if we have some.
+	$psc_transient = psc_get_plugin_status_transient( $plugins, true );
+
 	// Set defaults if we don't have any.
 	if( ! is_array( $options ) ) { $options = array( 'email-enabled' => true ); update_option( 'plugin_status_check', $options ); }
 
-	// Check to see if the form has been submitted.
-	if( array_key_exists( 'pcsupdateoptions', $_POST ) ) {
+	// Check to see if the settings have been submitted.
+	if( array_key_exists( 'pcs_update_options', $_POST ) ) {
 		// By default, enabled the e-mail.
 		$options['email-enabled'] = true;
 
@@ -22,6 +31,29 @@ function pcs_options_page() {
 
 		// Store the options.
 		update_option( 'plugin_status_check', $options );
+	}
+
+	// Check to see if the wp cron reset button has been pressed.
+	if( array_key_exists( 'pcs_reset_cron', $_POST ) ) {
+		// If there is an existing cron job, unscheduled it now.
+		if( $next_cron_job ) {
+			wp_unschedule_event( $next_cron_job, 'psc_daily_event' );
+	    }
+
+	    // Now create a new cron job in the future by 60 seconds.
+	    wp_schedule_event( time() + 60, 'daily', 'psc_daily_event' );
+
+		// Reset when the next cron job is going to be for the page update.
+		$next_cron_job = wp_next_scheduled ( 'psc_daily_event' );
+	}
+
+	// Check to see if the manual data update button has been pressed.
+	if( array_key_exists( 'pcs_update_data', $_POST ) ) {
+		// Delete the existing transient if it exists.
+		delete_transient( 'psc_wp_org_plugins_status' );
+
+		// Do a full update.
+		$psc_transient = psc_get_plugin_status_transient( $plugins );
 	}
 
 	if( $options['email-enabled'] == true ) {
@@ -44,11 +76,10 @@ function pcs_options_page() {
 	echo '</ul>' . PHP_EOL;
 
 	echo '<div id="fragment-0">' . PHP_EOL;
-	echo __( 'Daily admin status e-mail enabled' ) . ': ' . PHP_EOL;
-	echo '<input type="checkbox" name="email-enabled"' . $checked . '>' . PHP_EOL;
-
-	// Get the next cronjob schedule.
-	$next_cron_job = wp_next_scheduled ( 'psc_daily_event' );
+	echo '<span>';
+	echo __( 'Daily admin status e-mail enabled' ) . ': ';
+	echo '<input type="checkbox" name="email-enabled"' . $checked . '>';
+	echo '</span>' . PHP_EOL;
 
 	// Make a friendly date/time for the last data update.
 	if( $next_cron_job == 0 ) {
@@ -58,28 +89,43 @@ function pcs_options_page() {
 	}
 
 	echo '<div class="submit">' . PHP_EOL;
-	echo '<input type="submit" class="button-primary" name="pcsupdateoptions" value="' . __( 'Update Options' ) . '" />' . PHP_EOL;
+	echo '<input type="submit" class="button-primary" name="pcs_update_options" value="' . __( 'Update Options' ) . '" />' . PHP_EOL;
 	echo '</div>' . PHP_EOL;
 
+	echo '<hr>' . PHP_EOL;
+
 	// Let the user know when the data was last updated.
+	echo '<span>' . __( 'Next cron schedule' ) . ': ' . $date_string . '</span>' . PHP_EOL;
+
+	echo '<div class="submit">' . PHP_EOL;
+	echo '<input type="submit" class="button-primary" name="pcs_reset_cron" value="' . __( 'Reset Cron Job' ) . '" />' . PHP_EOL;
 	echo '<br>' . PHP_EOL;
-	echo '<p>' . __( 'Next cron schedule' ) . ': ' . $date_string . '</p>' . PHP_EOL;
+	echo __( '(will reset the cron task to be current time +1 minute)' ) . PHP_EOL;
+	echo '</div>' . PHP_EOL;
 
-	// Grab the plugin list.
-	$plugins = get_plugins();
+	echo '<hr>' . PHP_EOL;
 
-	// Retrieve the data without updating it to see if we have some.
-	$psc_transient = psc_get_plugin_status_transient( $plugins, true );
 
 	// Make a friendly date/time for the last data update.
 	if( $psc_transient['timestamp'] == 0 ) {
-		$date_string = __( 'Never' );
+		// Note, $date_string is still set to the next cron job at this time, so we can use it here without resetting it.
+		echo '<span>' . __( 'Data has not yet been retrieved from wordpress.org, please manually update the data or wait for it to become available on' ) . ': ' . $date_string . '</span>';
+
 	} else {
+		// Make the date string to be the last update time.
 		$date_string = wp_date( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $psc_transient['timestamp'] );
+
+		// Let the user know when the data was last updated.
+		echo '<span>' . __( 'Data last updated' ) . ': ' . $date_string . '</span>' . PHP_EOL;
 	}
 
-	// Let the user know when the data was last updated.
-	echo '<p>' . __( 'Data last updated' ) . ': ' . $date_string . '</p>' . PHP_EOL;
+	echo '<div class="submit">' . PHP_EOL;
+	echo '<input type="submit" class="button-primary" name="pcs_update_data" value="' . __( 'Manual Data Update' ) . '" />' . PHP_EOL;
+	echo '<br>' . PHP_EOL;
+	echo '(updating the data may take a long time if you have a significant number of plugins, be patient and wait for the page to complete its loading)' . PHP_EOL;
+	echo '</div>' . PHP_EOL;
+
+	echo '<hr>' . PHP_EOL;
 
 	echo '</div>' . PHP_EOL;
 

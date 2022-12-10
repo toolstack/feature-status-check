@@ -7,7 +7,8 @@ This software is released under the GPL v2.0, see license.txt for details
 
 // Runs on activation to add the cron job.
 function psc_activation() {
-    wp_schedule_event( time(), 'daily', 'psc_daily_event' );
+    // Schedule the cron job to be 60 seconds in the future.
+    wp_schedule_event( time() + 60 , 'daily', 'psc_daily_event' );
 }
 
 // Runs on de-activation to remove the cron job.

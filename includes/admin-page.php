@@ -22,7 +22,7 @@ function psc_display( $no_update = false, $no_title = false ) {
     	wp_schedule_event( time(), 'daily', 'psc_daily_event' );
     }
 
-    // Ouput the title unless we've been told not to.
+    // Output the title unless we've been told not to.
     if( ! $no_title ) {
 		echo '<h1>' . __( 'Plugin Status Check' ) . '</h1>' . PHP_EOL;
 	}
@@ -148,8 +148,8 @@ function psc_display( $no_update = false, $no_title = false ) {
 		// Create a form to submit a manual data update request.
 		echo '<form action="' . esc_url( admin_url( 'plugins.php?page=psc_admin_menu' ) ) . '" method="post">' . PHP_EOL;
 		echo '<input type="hidden" name="pcs_data_update" value="true">' . PHP_EOL;
-		submit_button( 'Manual Data Update' ) . PHP_EOL;
-		echo '<span>Note: Updating the data may take a long time if you have a significant number of plugins, be paitent and wait for the page to complete its loading.</span>' . PHP_EOL;
+		submit_button( __( 'Manual Data Update' ) ) . PHP_EOL;
+		echo '<span>' . __( '(updating the data may take a long time if you have a significant number of plugins, be patient and wait for the page to complete its loading)' ) . '</span>' . PHP_EOL;
 		echo '</form>' . PHP_EOL;
 	}
 }
