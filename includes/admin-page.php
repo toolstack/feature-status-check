@@ -102,28 +102,7 @@ function psc_display( $no_update = false, $no_title = false ) {
 			$version_class = $psc_wp_org_plugins_status[$name]['status'] == 'out_of_date' ? ' class="psc_table_cell_center_align psc_status_out_of_date"' : ' class="psc_table_cell_center_align"';
 
 			// Make the status more friendly.
-			switch( $psc_wp_org_plugins_status[$name]['status'] ) {
-				case 'up_to_date':
-					$friendly_status = __( 'Up to Date' );
-					break;
-				case 'out_of_date':
-					$friendly_status = __( 'Out of Date' );
-					break;
-				case 'untested':
-					$friendly_status = __( 'Un-Tested' );
-					break;
-				case 'not_found':
-					$friendly_status = __( 'Not Found' );
-					break;
-				case 'closed':
-					$friendly_status = __( 'Closed' );
-					break;
-				case 'temp_closed':
-					$friendly_status = __( 'Temporarily Closed' );
-					break;
-				default:
-					$friendly_status = ucwords( str_replace('_', ' ', $psc_wp_org_plugins_status[$name]['status'] ) );
-			}
+			$friendly_status = pcs_pretty_status( $psc_wp_org_plugins_status[$name]['status'] );
 
 			// Build the plugin homepage link as well as the author link if we have that data, otherwise return just what we have.
 			if( $psc_wp_org_plugins_status[$name]['status'] != 'not_found' && $psc_wp_org_plugins_status[$name]['status'] != 'no_data' ) {
