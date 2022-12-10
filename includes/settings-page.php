@@ -64,7 +64,7 @@ function pcs_options_page() {
 	echo '<script type="text/javascript">jQuery(document).ready(function() { jQuery("#tabs").tabs(); jQuery("#tabs").tabs("option", "active", 0 ); } );</script>' . PHP_EOL;
 
 	echo '<div class="wrap">' . PHP_EOL;
-	echo '<h2>' .  __( 'Plugin Status Check' ) . '</h2>' . PHP_EOL;
+	echo '<h1>' .  __( 'Plugin Status Check' ) . '</h1>' . PHP_EOL;
 	echo '<br>' . PHP_EOL;
 
 	echo '<form method="post" action="options-general.php?page=plugin-status-check/plugin-status-check.php">' . PHP_EOL;
@@ -76,6 +76,7 @@ function pcs_options_page() {
 	echo '</ul>' . PHP_EOL;
 
 	echo '<div id="fragment-0">' . PHP_EOL;
+	echo '<h2>' . __( 'E-Mail' ) . '</h2>' . PHP_EOL;
 	echo '<span>';
 	echo __( 'Daily admin status e-mail enabled' ) . ': ';
 	echo '<input type="checkbox" name="email-enabled"' . $checked . '>';
@@ -93,6 +94,7 @@ function pcs_options_page() {
 	echo '</div>' . PHP_EOL;
 
 	echo '<hr>' . PHP_EOL;
+	echo '<h2>' . __( 'Cron' ) . '</h2>' . PHP_EOL;
 
 	// Let the user know when the data was last updated.
 	echo '<span>' . __( 'Next cron schedule' ) . ': ' . $date_string . '</span>' . PHP_EOL;
@@ -104,6 +106,7 @@ function pcs_options_page() {
 	echo '</div>' . PHP_EOL;
 
 	echo '<hr>' . PHP_EOL;
+	echo '<h2>' . __( 'Data' ) . '</h2>' . PHP_EOL;
 
 
 	// Make a friendly date/time for the last data update.
