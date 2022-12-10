@@ -29,9 +29,20 @@ function psc_daily_event() {
     $new_pcs_transient = psc_get_plugin_status_transient( $plugins );
 
     // Make sure we had some status to start with, if we don't there's no point trying to determine the differences, so just return now.
-    if( ! is_array( $old_pcs_transient ) || ! array_key_exists( 'data', $old_pcs_transient ) || count( $old_pcs_transient['data'] ) == 0 ) {
+    if( ! is_array( $old_pcs_transient ) ||
+        ! array_key_exists( 'data', $old_pcs_transient ) ||
+        count( $old_pcs_transient['data'] ) == 0 ) {
         return;
     }
+
+    // Get the options.
+    $options = get_option( 'plugin_status_check' );
+
+    // Set defaults if we don't have any.
+    if( ! is_array( $options ) ) { $options = array( 'email-enabled' => true ); update_option( 'plugin_status_check', $options ); }
+
+    // Check to see if the status e-mail has been disabled by the admin, if so just return now.
+    if( $options['email-enabled'] == false ) { return; }
 
     // Let's see if we added any plugins.
     $new_plugins = false;
@@ -104,16 +115,26 @@ function psc_css_and_js( $hook ) {
  	$current_screen = get_current_screen();
 
  	// If we're not on the phc admin screen, don't enqueue anything.
-    if( strpos($current_screen->base, 'psc_admin_menu') === false && strpos($current_screen->base, 'site-health') === false ) {
+    if( strpos($current_screen->base, 'psc_admin_menu') === false &&        // The Plugins->Status Check page.
+        strpos($current_screen->base, 'site-health') === false &&           // The Site Health Page.
+        strpos($current_screen->base, 'plugin-status-check') === false ) {  // The Plugin Status Check Settings page.
         return;
     }
 
+    // Load the jquery tabs ui elements.
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('jquery-ui-core');
+    wp_enqueue_script('jquery-ui-tabs');
+
 	// Enqueue our css.
-	wp_enqueue_style( 'phc-css', plugins_url( 'css/psc.css', PHC_PLUGIN_FILE ), array(), PHC_VERSION );
+	wp_enqueue_style( 'phc-css', plugins_url( 'css/psc.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
+    wp_enqueue_style( 'jquery-ui-1.10.4.custom', plugins_url( 'css/jquery-ui-1.10.4.custom.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
+    wp_enqueue_style( 'jquery-ui-tabs', plugins_url( 'css/jquery-ui-tabs.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
+
 
 	// Load the table sorter from https://github.com/tofsjonas/sortable
-	wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', PHC_PLUGIN_FILE ), array(), PHC_VERSION );
-	wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', PHC_PLUGIN_FILE ), array(), PHC_VERSION );
+	wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
+	wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
 }
 
 // Gets the slug for a given plugin name.
@@ -158,4 +179,9 @@ function pcs_pretty_status( $status ) {
     }
 
     return $friendly_status;
+}
+
+// Add us to the settings menu.
+function pcs_add_options_page() {
+    $page = add_options_page( __( 'Plugin Status Check' ), __( 'Plugin Status Check' ), 'manage_options', PSC_PLUGIN_FILE, 'pcs_options_page' );
 }
