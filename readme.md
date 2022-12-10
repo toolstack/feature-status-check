@@ -6,7 +6,7 @@
 **Requires at least:** 5.2  
 **Tested up to:** 6.1.1  
 **Requires PHP:** 7.0  
-**Stable tag:** v1.0  
+**Stable tag:** 1.0  
 **License:** GPLv2  
 
 Checks to see if the plugins you have on your site are still supported in the plugin directory.
@@ -48,6 +48,9 @@ By default, Plugin Status Check setups a daily cron job to cache this data so th
 
 ### 2. WordPress Site Health integration ###
 ![WordPress Site Health integration](assets/screenshot-2.png)
+
+### 3. Settings page. ###
+![Settings page.](assets/screenshot-3.png)
 
 
 ## Changelog ##
