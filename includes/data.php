@@ -27,9 +27,6 @@ function psc_get_plugin_status_transient( $plugins, $no_update = false ) {
 		return array( 'timestamp' => $psc_wp_org_plugins_date, 'data' => $psc_wp_org_plugins_status );
 	}
 
-	// Force cache update, for testing only.
-	// $psc_wp_org_plugins_status = false;
-
 	// Check to see if the transient has expired, or is older than we want.
 	// We've set the expiry time on the transient to two days so the cron job
 	// has time to update it in the background.
