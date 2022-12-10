@@ -19,6 +19,8 @@ Plugin Status Check gives you a unified dashboard to view the status of all your
 
 Plugin Status Check also integrates with the WordPress site Health feature and highlights those plugins with possible issues.
 
+Finally, Plugin Status Check also send out a change report to the site admin during the daily update via e-mail.
+
 This code is released under the GPL v2, see license.txt for details.
 
 == Installation ==
