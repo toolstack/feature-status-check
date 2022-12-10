@@ -43,16 +43,16 @@ Plugin Status Check has three pages you can visit:
 
 If you have a large number of plugins installed on your site, each one must be checked against wordpress.org, this can take a significant amount of time.
 
-By default, Plugin Status Check setups a daily cron job to cache this data so the user should never see this, but if there is a problem with cron, the status check page may take a while to load while this data is retrieved.
+By default, Plugin Status Check sets up a daily cron job to cache this data so you should never see this, but if there is a problem with cron, or you want to manually update the data then this may take a while to load while this data is retrieved.
 
 = What do the different status' mean? =
 
-* *Not Found* means the plugin does not exist in the wordpress.org plugin directory.  You'll have to manually check it from where you installed the plugin from.
-* *Out of Date* means there is a new version of the plugin ready to install.
-* *Up to Date* means that the plugin has been tested within the last three years and the current version is installed.
-* *Un-Tested* means that the plugin has not been tested with WordPress or updated in 3 years or more.
-* *Temporarily Closed* means the plugin is temporarily available for download from the wordpress.org plugin directory.  This is often due to a security issue or a violation of the community standards.  How long the plugin will remain in this state has a couple of factors to it, but in general no longer than 60 days.
-* *Closed* means the plugin is permanently closed.
+* **Not Found** means the plugin does not exist in the wordpress.org plugin directory.  You'll have to manually check it from where you installed the plugin from.
+* **Out of Date** means there is a new version of the plugin ready to install.
+* **Up to Date** means that the plugin has been tested within the last three years and the current version is installed.
+* **Un-Tested** means that the plugin has not been tested with WordPress or updated in 3 years or more.
+* **Temporarily Closed** means the plugin is temporarily available for download from the wordpress.org plugin directory.  This is often due to a security issue or a violation of the community standards.  How long the plugin will remain in this state has a couple of factors to it, but in general no longer than 60 days.
+* **Closed** means the plugin is permanently closed.
 
 == Screenshots ==
 
