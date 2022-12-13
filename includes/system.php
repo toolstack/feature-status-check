@@ -6,33 +6,33 @@ This software is released under the GPL v2.0, see license.txt for details
 */
 
 // Runs on activation to add the cron job.
-function psc_activation() {
+function fsc_activation() {
     // Schedule the cron job to be 60 seconds in the future.
-    wp_schedule_event( time() + 60 , 'daily', 'psc_daily_event' );
+    wp_schedule_event( time() + 60 , 'daily', 'fsc_daily_event' );
 }
 
 // Runs on de-activation to remove the cron job.
-function psc_deactivation() {
-	$timestamp = wp_next_scheduled( 'psc_daily_event' );
+function fsc_deactivation() {
+	$timestamp = wp_next_scheduled( 'fsc_daily_event' );
 
-    wp_unschedule_event( $timestamp, 'psc_daily_event' );
+    wp_unschedule_event( $timestamp, 'fsc_daily_event' );
 }
 
 // The daily cron job callback.
-function psc_daily_event() {
+function fsc_daily_event() {
     // Grab the install plugin list, used later to make things look pretty for the end user.
     $plugins = get_plugins();
 
     // First get the transient without updating it so we can use it to compare against later.
-    $old_pcs_transient = psc_get_plugin_status_transient( $plugins, true );
+    $old_fsc_transient = fsc_get_plugin_status_transient( $plugins, true );
 
     // Now perform the update.
-    $new_pcs_transient = psc_get_plugin_status_transient( $plugins );
+    $new_fsc_transient = fsc_get_plugin_status_transient( $plugins );
 
     // Make sure we had some status to start with, if we don't there's no point trying to determine the differences, so just return now.
-    if( ! is_array( $old_pcs_transient ) ||
-        ! array_key_exists( 'data', $old_pcs_transient ) ||
-        count( $old_pcs_transient['data'] ) == 0 ) {
+    if( ! is_array( $old_fsc_transient ) ||
+        ! array_key_exists( 'data', $old_fsc_transient ) ||
+        count( $old_fsc_transient['data'] ) == 0 ) {
         return;
     }
 
@@ -49,7 +49,7 @@ function psc_daily_event() {
     $new_plugins = false;
 
     foreach( $plugins as $name => $plugin ) {
-        if( ! array_key_exists( $name, $old_pcs_transient['data'] ) ) {
+        if( ! array_key_exists( $name, $old_fsc_transient['data'] ) ) {
             $new_plugins[] = $name;
         }
     }
@@ -58,8 +58,8 @@ function psc_daily_event() {
     $status_changed = false;
 
     foreach( $plugins as $name => $plugin ) {
-        if( array_key_exists( $name, $old_pcs_transient['data'] ) && $old_pcs_transient['data'][$name]['status'] != $new_pcs_transient['data'][$name]['status'] ) {
-            $status_changed[$name] = $new_pcs_transient['data'][$name]['status'];
+        if( array_key_exists( $name, $old_fsc_transient['data'] ) && $old_fsc_transient['data'][$name]['status'] != $new_fsc_transient['data'][$name]['status'] ) {
+            $status_changed[$name] = $new_fsc_transient['data'][$name]['status'];
         }
     }
 
@@ -71,20 +71,20 @@ function psc_daily_event() {
         $blogemail = get_bloginfo('admin_email');
 
         // Create a subject line.
-        $subject = __( 'Plugin Status Check - Some plugins have a changed status...' );
+        $subject = __( 'Feature Status Check - Some plugins have a changed status...', 'feature-status-check' );
 
         // Set the headers to include a pretty from line.
         $headers[] = "From: $blogname <$blogemail>";
 
         // Construct the message body.
-        $message  = __( 'Some plugins have a changed status, see below for details.' . "\r\n" );
+        $message  = __( 'Some plugins have a changed status, see below for details.', 'feature-status-check' ) . "\r\n";
         $message .= "\r\n";
 
         // Include new plugins we found during this update.
         if( is_array( $new_plugins ) ) {
-            $message .= __( 'New plugins:' ) . "\r\n";
+            $message .= __( 'New plugins', 'feature-status-check' ) . ":\r\n";
             foreach( $new_plugins as $name ) {
-                $message .= "\t* " . $plugins[$name]['Name'] . ' (' . pcs_pretty_status( $new_pcs_transient['data'][$name]['status'] ) . ')' . "\r\n";
+                $message .= "\t* " . $plugins[$name]['Name'] . ' (' . fsc_pretty_status( $new_fsc_transient['data'][$name]['status'] ) . ')' . "\r\n";
             }
         }
 
@@ -92,9 +92,9 @@ function psc_daily_event() {
 
         // Include plugins with a changed status.
         if( is_array( $status_changed ) ) {
-            $message .= __( 'Plugins with new status:' ) . "\r\n";
+            $message .= __( 'Plugins with new status', 'feature-status-check' ) . ":\r\n";
             foreach( $status_changed as $name => $new_status ) {
-                $message .= "\t* " . $plugins[$name]['Name'] . ' (' . pcs_pretty_status( $new_status ) . ')' . "\r\n";
+                $message .= "\t* " . $plugins[$name]['Name'] . ' (' . fsc_pretty_status( $new_status ) . ')' . "\r\n";
             }
         }
 
@@ -108,17 +108,17 @@ function psc_daily_event() {
 }
 
 // Add our menu item.
-function psc_admin_menu() {
-	add_submenu_page( 'plugins.php', 'Plugin Status Check', 'Status Check', 'install_plugins', 'psc_admin_menu', 'psc_display' );
+function fsc_admin_menu() {
+	add_submenu_page( 'plugins.php', 'Feature Status Check', 'Status Check', 'install_plugins', 'fsc_admin_menu', 'fsc_display' );
 }
 
-function psc_css_and_js( $hook ) {
+function fsc_css_and_js( $hook ) {
  	$current_screen = get_current_screen();
 
  	// If we're not on the phc admin screen, don't enqueue anything.
-    if( strpos($current_screen->base, 'psc_admin_menu') === false &&        // The Plugins->Status Check page.
+    if( strpos($current_screen->base, 'fsc_admin_menu') === false &&        // The Plugins->Status Check page.
         strpos($current_screen->base, 'site-health') === false &&           // The Site Health Page.
-        strpos($current_screen->base, 'plugin-status-check') === false ) {  // The Plugin Status Check Settings page.
+        strpos($current_screen->base, 'feature-status-check') === false ) {  // The Feature Status Check Settings page.
         return;
     }
 
@@ -128,18 +128,18 @@ function psc_css_and_js( $hook ) {
     wp_enqueue_script('jquery-ui-tabs');
 
 	// Enqueue our css.
-	wp_enqueue_style( 'phc-css', plugins_url( 'css/psc.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
-    wp_enqueue_style( 'jquery-ui-1.10.4.custom', plugins_url( 'css/jquery-ui-1.10.4.custom.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
-    wp_enqueue_style( 'jquery-ui-tabs', plugins_url( 'css/jquery-ui-tabs.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
+	wp_enqueue_style( 'phc-css', plugins_url( 'css/fsc.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
+    wp_enqueue_style( 'jquery-ui-1.10.4.custom', plugins_url( 'css/jquery-ui-1.10.4.custom.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
+    wp_enqueue_style( 'jquery-ui-tabs', plugins_url( 'css/jquery-ui-tabs.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
 
 
 	// Load the table sorter from https://github.com/tofsjonas/sortable
-	wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
-	wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', PSC_PLUGIN_FILE ), array(), PSC_VERSION );
+	wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
+	wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
 }
 
 // Gets the slug for a given plugin name.
-function pcs_get_plugin_slug( $name ) {
+function fsc_get_plugin_slug( $name ) {
     // Most plugins will be in the format "plugin_slug/slug.php", some will be in "plugin_slug/random_name.php" (old pluings mostly),
     // and a very few will be in the format of "slug.php" (plugins that are a single file and contained in the "plugins" directly only).
     // There could be edge cases where the directory name isn't the slug, but this is uncommon to say the least.
@@ -154,35 +154,35 @@ function pcs_get_plugin_slug( $name ) {
 }
 
 // Make the status look human readable.
-function pcs_pretty_status( $status ) {
+function fsc_pretty_status( $status ) {
     // Make the status more friendly.
     switch( $status ) {
         case 'up_to_date':
-            $friendly_status = __( 'Up to Date' );
+            $friendly_status = __( 'Up to Date', 'feature-status-check' );
             break;
         case 'out_of_date':
-            $friendly_status = __( 'Out of Date' );
+            $friendly_status = __( 'Out of Date', 'feature-status-check' );
             break;
         case 'untested':
-            $friendly_status = __( 'Un-Tested' );
+            $friendly_status = __( 'Un-Tested', 'feature-status-check' );
             break;
         case 'not_found':
-            $friendly_status = __( 'Not Found' );
+            $friendly_status = __( 'Not Found', 'feature-status-check' );
             break;
         case 'closed':
-            $friendly_status = __( 'Closed' );
+            $friendly_status = __( 'Closed', 'feature-status-check' );
             break;
         case 'temp_closed':
-            $friendly_status = __( 'Temporarily Closed' );
+            $friendly_status = __( 'Temporarily Closed', 'feature-status-check' );
             break;
         default:
-            $friendly_status = ucwords( str_replace('_', ' ', $psc_wp_org_plugins_status[$name]['status'] ) );
+            $friendly_status = ucwords( str_replace('_', ' ', $fsc_wp_org_plugins_status[$name]['status'] ) );
     }
 
     return $friendly_status;
 }
 
 // Add us to the settings menu.
-function pcs_add_options_page() {
-    $page = add_options_page( __( 'Plugin Status Check' ), __( 'Plugin Status Check' ), 'manage_options', PSC_PLUGIN_FILE, 'pcs_options_page' );
+function fsc_add_options_page() {
+    $page = add_options_page( __( 'Feature Status Check', 'feature-status-check' ), __( 'Feature Status Check', 'feature-status-check' ), 'manage_options', FSC_PLUGIN_FILE, 'fsc_options_page' );
 }

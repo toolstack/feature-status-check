@@ -6,70 +6,70 @@ This software is released under the GPL v2.0, see license.txt for details
 */
 
 // Load the transient from cache and add update it if required.
-function psc_get_plugin_status_transient( $plugins, $no_update = false ) {
-	$psc_wp_org_plugins_status = array();
-	$psc_wp_org_plugins_date = 0;
+function fsc_get_plugin_status_transient( $plugins, $no_update = false ) {
+	$fsc_wp_org_plugins_status = array();
+	$fsc_wp_org_plugins_date = 0;
 
-	$psc_transient = get_transient( 'psc_wp_org_plugins_status' );
+	$fsc_transient = get_transient( 'fsc_wp_org_plugins_status' );
 
-	if( is_array( $psc_transient ) && array_key_exists( 'data', $psc_transient ) ) {
-		$psc_wp_org_plugins_status = $psc_transient['data'];
-		$psc_wp_org_plugins_date = $psc_transient['timestamp'];
+	if( is_array( $fsc_transient ) && array_key_exists( 'data', $fsc_transient ) ) {
+		$fsc_wp_org_plugins_status = $fsc_transient['data'];
+		$fsc_wp_org_plugins_date = $fsc_transient['timestamp'];
 	}
 
 	// If we didn't find a transient in the database, setup a default one now.
-	if( $psc_transient === false ) {
-		$psc_transient = array( 'timestamp' => $psc_wp_org_plugins_date, 'data' => $psc_wp_org_plugins_status );
+	if( $fsc_transient === false ) {
+		$fsc_transient = array( 'timestamp' => $fsc_wp_org_plugins_date, 'data' => $fsc_wp_org_plugins_status );
 	}
 
 	// If we've been told not to do any updates, just return now.
 	if( $no_update == true ) {
-		return array( 'timestamp' => $psc_wp_org_plugins_date, 'data' => $psc_wp_org_plugins_status );
+		return array( 'timestamp' => $fsc_wp_org_plugins_date, 'data' => $fsc_wp_org_plugins_status );
 	}
 
 	// Check to see if the transient has expired, or is older than we want.
 	// We've set the expiry time on the transient to two days so the cron job
 	// has time to update it in the background.
-	if( ! is_array( $psc_wp_org_plugins_status ) || time() - $psc_wp_org_plugins_date > 86400 ) {
-		$psc_wp_org_plugins_status = array();
+	if( ! is_array( $fsc_wp_org_plugins_status ) || time() - $fsc_wp_org_plugins_date > 86400 ) {
+		$fsc_wp_org_plugins_status = array();
 
 		foreach( $plugins as $name => $plugin ) {
 			// Get the slug for the plugin.
-			$slug = pcs_get_plugin_slug( $name );
+			$slug = fsc_get_plugin_slug( $name );
 
-			$psc_wp_org_plugins_status[$name] = psc_get_plugin_status( $slug, $plugin['Version'] );
+			$fsc_wp_org_plugins_status[$name] = fsc_get_plugin_status( $slug, $plugin['Version'] );
 		}
 
 		// Set and store the new transient.
-		$psc_transient = array( 'timestamp' => time(), 'data' => $psc_wp_org_plugins_status );
-		set_transient( 'psc_wp_org_plugins_status', $psc_transient, 172800 );
+		$fsc_transient = array( 'timestamp' => time(), 'data' => $fsc_wp_org_plugins_status );
+		set_transient( 'fsc_wp_org_plugins_status', $fsc_transient, 172800 );
 	}
 
 	// Check to see if we've added a plugins since the last transient save.
 	$new_plugins = false;
 	foreach( $plugins as $name => $plugin ) {
-		if( ! array_key_exists( $name, $psc_wp_org_plugins_status ) ) {
-			$psc_wp_org_plugins_status[$name] = psc_get_plugin_status( $slug, $plugin['Version'] );
+		if( ! array_key_exists( $name, $fsc_wp_org_plugins_status ) ) {
+			$fsc_wp_org_plugins_status[$name] = fsc_get_plugin_status( $slug, $plugin['Version'] );
 			$new_plugins = true;
 		}
 	}
 
 	if( $new_plugins ) {
 		// Figure out when the transient was set to expire.
-		$new_expiry_time = 172800 - ( time() - $psc_wp_org_plugins_date );
+		$new_expiry_time = 172800 - ( time() - $fsc_wp_org_plugins_date );
 
 		// Reset the transient variable to the new data.
-		$psc_transient = array( 'timestamp' => $psc_wp_org_plugins_date, 'data' => $psc_wp_org_plugins_status );
+		$fsc_transient = array( 'timestamp' => $fsc_wp_org_plugins_date, 'data' => $fsc_wp_org_plugins_status );
 
 		// Store the transient for future use with the new plugins.
-		set_transient( 'psc_wp_org_plugins_status', $psc_transient, $new_expiry_time );
+		set_transient( 'fsc_wp_org_plugins_status', $fsc_transient, $new_expiry_time );
 	}
 
-	return $psc_transient;
+	return $fsc_transient;
 }
 
 // Create an individual plugins status array.
-function psc_get_plugin_status( $slug, $version ) {
+function fsc_get_plugin_status( $slug, $version ) {
 	require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
 	// Make sure we use an english variant of the wordpress plugin directory.

@@ -1,16 +1,16 @@
-.psc_table {
+.fsc_table {
     border: 0px;
     margin-right: 20px;
     border-collapse: collapse;
     width: auto;
 }
 
-.psc_table th, td {
+.fsc_table th, td {
     border: 0px;
     padding: 5px;
 }
 
-.psc_table th {
+.fsc_table th {
     padding: 1em;
     background-color: blue;
     color: white;
@@ -19,57 +19,57 @@
     text-align: left;
 }
 
-.psc_table_cell_center_align {
+.fsc_table_cell_center_align {
     text-align: center !important;
 }
 
-.psc_table tr:nth-child(even) {
+.fsc_table tr:nth-child(even) {
             background-color: white;
         }
 
-.psc_status_up_to_date {
+.fsc_status_up_to_date {
     background-color: green;
     color: white;
 }
 
-.psc_status_untested {
+.fsc_status_untested {
     background-color: yellow;
     color: black;
 }
 
-.psc_status_closed {
+.fsc_status_closed {
     background-color: red;
     color: white;
 }
 
-.psc_status_temp_closed {
+.fsc_status_temp_closed {
     background-color: red;
     color: white;
 }
 
-.psc_status_not_found {
+.fsc_status_not_found {
     background-color: transparent;
     color: black;
 }
 
-.psc_status_out_of_date {
+.fsc_status_out_of_date {
     background-color: aqua;
     color: black;
 }
 
-.psc_status_no_data {
+.fsc_status_no_data {
     color: grey;
 }
 
-.psc_site_health_untested {
+.fsc_site_health_untested {
     color: grey;
 }
 
-.psc_site_health_temp_closed {
+.fsc_site_health_temp_closed {
     color: orange;
 }
 
-.psc_site_health_closed {
+.fsc_site_health_closed {
     color: red;
 }
 
