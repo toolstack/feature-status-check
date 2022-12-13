@@ -79,4 +79,4 @@ None at this time.
 
 ## Roadmap ##
 
-* None at this time!
+* Add theme status check support.
