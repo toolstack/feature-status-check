@@ -153,20 +153,20 @@ function fsc_options_page() {
 			</tr>
 
 			<tr valign="top">
-				<td scope="row" colspan="2"><h2><?php _e( 'Rate and Review at WordPress.org' ); ?></h2></td>
+				<td scope="row" colspan="2"><h2><?php _e( 'Rate and Review at WordPress.org', 'feature-status-check' ); ?></h2></td>
 			</tr>
 
 			<tr valign="top">
-				<td scope="row" colspan="2"><?php _e( 'Thanks for installing Feature Status Check, I encourage you to submit a ' );?> <a href="http://wordpress.org/support/view/plugin-reviews/feature-status-check" target="_blank"><?php _e( 'rating and review' ); ?></a> <?php _e( 'over at WordPress.org.  Your feedback is greatly appreciated!' );?></td>
+				<td scope="row" colspan="2"><?php _e( 'Thanks for installing Feature Status Check, I encourage you to submit a ', 'feature-status-check' );?> <a href="http://wordpress.org/support/view/plugin-reviews/feature-status-check" target="_blank"><?php _e( 'rating and review', 'feature-status-check' ); ?></a> <?php _e( 'over at WordPress.org.  Your feedback is greatly appreciated!', 'feature-status-check' );?></td>
 			</tr>
 
 			<tr valign="top">
-				<td scope="row" colspan="2"><h2><?php _e( 'Support' ); ?></h2></td>
+				<td scope="row" colspan="2"><h2><?php _e( 'Support', 'feature-status-check' ); ?></h2></td>
 			</tr>
 
 			<tr valign="top">
 				<td scope="row" colspan="2">
-					<p><?php _e( 'Here are a few things to do submitting a support request:' ); ?></p>
+					<p><?php _e( 'Here are a few things to do submitting a support request', 'feature-status-check' ) . ':'; ?></p>
 
 					<ul style="list-style-type: disc; list-style-position: inside; padding-left: 25px;">
 						<li><?php echo sprintf( __( 'Have you search the %s for a similar issue?', 'feature-status-check' ), '<a href="http://wordpress.org/support/plugin/os-integration" target="_blank">' . __( 'support forum', 'feature-status-check' ) . '</a>');?></li>
@@ -183,7 +183,7 @@ function fsc_options_page() {
 						<li><?php _e( 'Have you checked your PHP and web server error logs?', 'feature-status-check' );?></li>
 					</ul>
 
-					<p><?php _e( 'Still not having any luck?' );?> <?php echo sprintf( __( 'Then please open a new thread on the %s.', 'feature-status-check' ), '<a href="http://wordpress.org/support/plugin/feature-status-check" target="_blank">' . __( 'WordPress.org support forum', 'feature-status-check' ) . '</a>');?></p>
+					<p><?php _e( 'Still not having any luck?', 'feature-status-check' );?> <?php echo sprintf( __( 'Then please open a new thread on the %s.', 'feature-status-check' ), '<a href="http://wordpress.org/support/plugin/feature-status-check" target="_blank">' . __( 'WordPress.org support forum', 'feature-status-check' ) . '</a>');?></p>
 				</td>
 			</tr>
 
