@@ -6,7 +6,7 @@
 **Requires at least:** 5.2  
 **Tested up to:** 6.1.1  
 **Requires PHP:** 7.0  
-**Stable tag:** 1.0  
+**Stable tag:** 1.1  
 **License:** GPLv2  
 
 Checks to see if the plugins you have on your site are still supported in the plugin directory.
@@ -68,9 +68,14 @@ By default, Feature Status Check sets up a daily cron job to cache this data so 
 
 ## Changelog ##
 
+### 1.1 ###
+
+* Release date: Dec 14, 2022
+* Cleanup wp debug warnings.
+
 ### 1.0 ###
 
-* Release date: TBD
+* Release date: Dec 13, 2022
 * Initial release.
 
 ## Upgrade Notice ##

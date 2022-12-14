@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Feature Status Check
-Version: 1.0
+Version: 1.1
 Plugin URI: http://toolstack.com/feature-status-check
 Author: Greg Ross
 Author URI: http://toolstack.com

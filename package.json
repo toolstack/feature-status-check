@@ -1,6 +1,6 @@
 {
   "name": "feature-status-check",
-  "version": "1.0.0",
+  "version": "1.1",
   "description": "Checks to see if the plugins you have on your site are still supported in the plugin directory.",
   "repository": {
     "type": "git",
