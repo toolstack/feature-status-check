@@ -56,6 +56,8 @@ function fsc_options_page() {
 		$fsc_transient = fsc_get_plugin_status_transient( $plugins );
 	}
 
+	$checked = '';
+
 	if( $options['email-enabled'] == true ) {
 		$checked = ' checked';
 	}

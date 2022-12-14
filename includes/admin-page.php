@@ -36,7 +36,7 @@ function fsc_display( $no_update = false, $no_title = false ) {
 	$fsc_no_data_message = false;
 
 	// Check to see if the user has requested a manual data update.
-	if( $_POST['fsc_data_update'] == 'true' ) {
+	if( array_key_exists( 'fsc_data_update', $_POST ) &&  $_POST['fsc_data_update'] == 'true' ) {
 		// Delete the existing transient if it exists.
 		delete_transient( 'fsc_wp_org_plugins_status' );
 
