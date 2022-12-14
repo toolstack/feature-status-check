@@ -150,16 +150,6 @@ function fsc_get_plugin_status( $slug, $version ) {
 				$result['last_updated'] = 'today';
 			}
 		}
-
-		// Check to see if the plugin has been closed.
-		if( str_contains( $wp_org_page, 'plugin has been closed' ) ) {
-			$result['status'] = "closed";
-		}
-
-		// Check to see if the plugin has been closed temporarily.
-		if( str_contains( $wp_org_page, 'closure is temporary' ) ) {
-			$result['status'] = "temp_closed";
-		}
 	} else{
 		// Since the WP api didn't return anything, check the website, as closed projects don't return API info.
 		$wp_org_page = file_get_contents( $wp_url . $slug );
