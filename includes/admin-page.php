@@ -11,8 +11,8 @@ function fsc_display( $no_update = false, $no_title = false ) {
 	if( ! is_bool( $no_update ) ) { $no_update = false; }
 	if( ! is_bool( $no_title ) ) { $no_title = false; }
 
-	// Make sure we use an english variant of the wordpress plugin directory.
-	$wp_url = 'https://en-ca.wordpress.org/plugins/';
+	// Define the url to the wordpress plugin directory.
+	$wp_url = 'https://wordpress.org/plugins/';
 
 	// Get the next cronjob schedule.
 	$next_cron_job = wp_next_scheduled ( 'fsc_daily_event' );
