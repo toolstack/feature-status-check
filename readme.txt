@@ -54,6 +54,10 @@ By default, Feature Status Check sets up a daily cron job to cache this data so 
 * **Temporarily Closed** means the plugin is temporarily available for download from the wordpress.org plugin directory.  This is often due to a security issue or a violation of the community standards.  How long the plugin will remain in this state has a couple of factors to it, but in general no longer than 60 days.
 * **Closed** means the plugin is permanently closed.
 
+= I've updated/removed a plugin, why hasn't it changed in the report? =
+
+To keep the traffic to wordpress.org to a minimum, the plugin will only update the data daily.  If you want to update the data manually, can do do so through the settings or at the bottom of the Status Check menu under Plugins.
+
 == Screenshots ==
 
 1. Feature Status Check screen.
