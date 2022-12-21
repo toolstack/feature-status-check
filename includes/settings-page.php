@@ -15,8 +15,11 @@ function fsc_options_page() {
 	// Grab the plugin list.
 	$plugins = get_plugins();
 
+	// Grab the theme list.
+	$themes = wp_get_themes();
+
 	// Retrieve the data without updating it to see if we have some.
-	$fsc_transient = fsc_get_plugin_status_transient( $plugins, true );
+	$fsc_transient = fsc_get_status_transient( $plugins, $themes, true );
 
 	// Set defaults if we don't have any.
 	if( ! is_array( $options ) ) { $options = array( 'email-enabled' => true ); update_option( 'plugin_status_check', $options ); }
@@ -50,10 +53,10 @@ function fsc_options_page() {
 	// Check to see if the manual data update button has been pressed.
 	if( array_key_exists( 'fsc_update_data', $_POST ) ) {
 		// Delete the existing transient if it exists.
-		delete_transient( 'fsc_wp_org_plugins_status' );
+		delete_transient( 'fsc_wp_org_status' );
 
 		// Do a full update.
-		$fsc_transient = fsc_get_plugin_status_transient( $plugins );
+		$fsc_transient = fsc_get_status_transient( $plugins, $themes );
 	}
 
 	$checked = '';

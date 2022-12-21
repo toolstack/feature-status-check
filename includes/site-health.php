@@ -17,14 +17,18 @@ function fsc_add_plugin_status_test( $tests ) {
 
 // Run our site status test.
 function fsc_status_test() {
-	// Make sure we use an english variant of the wordpress plugin directory.
-	$wp_url = 'https://wordpress.org/plugins/';
+	// The URLs for wordpress directories.
+	$wp_plugin_url = 'https://wordpress.org/plugins/';
+    $wp_theme_url = 'https://wordpress.org/themes/';
 
-    // Grab the install plugin list, used later to make things look pretty for the end user.
+    // Grab the installed plugin list, used later to make things look pretty for the end user.
     $plugins = get_plugins();
 
+    // Grab the install plugin list, used later to make things look pretty for the end user.
+    $themes = wp_get_themes();
+
 	// Grabbed the cached data, don't update it at this time as it takes too long.
-	$fsc_transient = fsc_get_plugin_status_transient( $plugins, true ) ;
+	$fsc_transient = fsc_get_status_transient( $plugins, $themes, true );
 
 	// Setup the default result.
     $result = array(
@@ -36,7 +40,7 @@ function fsc_status_test() {
         ),
         'description' => sprintf(
             '<p>%s</p>',
-            __( 'All plugins are still active on wordpress.org.', 'feature-status-check' )
+            __( 'All features are still active on wordpress.org.', 'feature-status-check' )
         ),
         'actions'     => '',
         'test'        => 'fsc_status_test',
@@ -50,11 +54,11 @@ function fsc_status_test() {
         $result['badge']['color'] = 'orange';
         $result['description'] = sprintf(
             '<p>%s</p>',
-            __( 'No data from wordpress.org could be found, please go to the Plugins->Status Check page to load it and then return here.', 'feature-status-check' )
+            __( 'No data from wordpress.org could be found, please go to the settings page to load it and then return here.', 'feature-status-check' )
         );
         $result['actions'] .= sprintf(
             '<p><a href="%s">%s</a></p>',
-            esc_url( admin_url( 'plugins.php?page=fsc_admin_menu' ) ),
+            esc_url( admin_url( 'options-general.php?page=feature-status-check%2Ffeature-status-check.php' ) ),
             __( 'Update data', 'feature-status-check' )
         );
 
@@ -67,44 +71,51 @@ function fsc_status_test() {
     $temp_closed = array();
 
     // Loop through the transient data one plugin at a time and filter them out by status.
-    foreach( $fsc_transient['data'] as $name => $plugin ) {
+    foreach( $fsc_transient['plugins'] as $name => $plugin ) {
+        // Get the slug for the plugin.
+        $slug = fsc_get_plugin_slug( $name );
+        $nice_name = $plugins[$name]['Name'];
+
     	switch( $plugin['status'] ) {
     		case 'untested':
-	    		$untested[] = $name;
+	    		$untested[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
 
     			break;
     		case 'closed':
-	    		$closed[] = $name;
+	    		$closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
 
     			break;
     		case 'temp_closed':
-	    		$temp_closed[] = $name;
+	    		$temp_closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
 
     			break;
     	}
     }
 
-    // Make the plugin names look pretty and make it a link to the wordpress.org plugin webpage.
-    foreach( $untested as $index => $name) {
-		// Get the slug for the plugin.
-		$slug = fsc_get_plugin_slug( $name );
+    // Loop through the transient data one theme at a time and filter them out by status.
+    foreach( $fsc_transient['themes'] as $name => $theme ) {
+        $nice_name = $themes[$name]->get('Name');
 
-    	$untested[$index] = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugins[$name]['Name'] . '</a>';
+        switch( $theme['status'] ) {
+            case 'untested':
+                $untested[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_theme_url . $name ) . '">' . esc_html( $nice_name ) . '</a>';
+
+                break;
+            case 'closed':
+                $closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_theme_url . $name ) . '">' . esc_html( $nice_name ) . '</a>';
+
+                break;
+            case 'temp_closed':
+                $temp_closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_theme_url . $name ) . '">' . esc_html( $nice_name ) . '</a>';
+
+                break;
+        }
     }
 
-    foreach( $closed as $index => $name) {
-		// Get the slug for the plugin.
-		$slug = fsc_get_plugin_slug( $name );
-
-    	$closed[$index] = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugins[$name]['Name'] . '</a>';
-    }
-
-    foreach( $temp_closed as $index => $name) {
-		// Get the slug for the plugin.
-		$slug = fsc_get_plugin_slug( $name );
-
-    	$temp_closed[$index] = '<a target="_blank" href="' . esc_attr( $wp_url . $slug ) . '">' . $plugins[$name]['Name'] . '</a>';
-    }
+    // Sort the arrays to look nice based upon the key names.
+    ksort( $untested );
+    ksort( $closed );
+    ksort( $temp_closed );
 
     // Create an unordered list for each status time.
     $ul_untested  	= count( $untested ) == 0 ? '' : '<h2 class="fsc_site_health_untested">' . __( 'Plugins untested in over 3 years', 'feature-status-check' ) . ':</h2><ul><li>' . implode( '</li><li>', $untested ) . '</li></ul>';
@@ -118,10 +129,10 @@ function fsc_status_test() {
         $result['badge']['color'] = 'red';
         $result['description'] = sprintf(
             '<p>%s <a href="%s">%s</a> %s </p>',
-            __( 'Some plugins installed on your site may no longer be supported and/or have security issues, please review the below list and', 'feature-status-check' ),
+            __( 'Some featured installed on your site may no longer be supported and/or have security issues, please review the below list and', 'feature-status-check' ),
             esc_url( admin_url( 'plugins.php' ) ),
             __( 'update/disable', 'feature-status-check' ),
-            __( 'as required (below links are to the plugin\'s wordpress.org page)', 'feature-status-check' ) . ':'
+            __( 'as required (below links are to the features\' wordpress.org page)', 'feature-status-check' ) . ':'
         );
         $result['actions'] .= $ul_closed . $ul_temp_closed . $ul_untested;
 
@@ -135,10 +146,10 @@ function fsc_status_test() {
         $result['badge']['color'] = 'orange';
         $result['description'] = sprintf(
             '<p>%s <a href="%s">%s</a> %s </p>',
-            __( 'Some plugins installed on your site may no longer be supported, please review the below list and', 'feature-status-check', 'feature-status-check' ),
+            __( 'Some features installed on your site may no longer be supported, please review the below list and', 'feature-status-check', 'feature-status-check' ),
             esc_url( admin_url( 'plugins.php' ) ),
             __( 'update/disable', 'feature-status-check', 'feature-status-check', 'feature-status-check' ),
-            __( 'as required (below links are to the plugin\'s wordpress.org page)', 'feature-status-check' ) . ':'
+            __( 'as required (below links are to the features\' wordpress.org page)', 'feature-status-check' ) . ':'
         );
         $result['actions'] .= $ul_closed . $ul_temp_closed . $ul_untested;
     }

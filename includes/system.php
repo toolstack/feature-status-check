@@ -20,19 +20,22 @@ function fsc_deactivation() {
 
 // The daily cron job callback.
 function fsc_daily_event() {
-    // Grab the install plugin list, used later to make things look pretty for the end user.
+    // Grab the installed plugin list, used later to make things look pretty for the end user.
     $plugins = get_plugins();
 
+    // Grab the installed theme list.
+    $themes = wp_get_themes();
+
     // First get the transient without updating it so we can use it to compare against later.
-    $old_fsc_transient = fsc_get_plugin_status_transient( $plugins, true );
+    $old_fsc_transient = fsc_get_status_transient( $plugins, $themes, true );
 
     // Now perform the update.
-    $new_fsc_transient = fsc_get_plugin_status_transient( $plugins );
+    $new_fsc_transient = fsc_get_status_transient( $plugins, $themes );
 
     // Make sure we had some status to start with, if we don't there's no point trying to determine the differences, so just return now.
     if( ! is_array( $old_fsc_transient ) ||
-        ! array_key_exists( 'data', $old_fsc_transient ) ||
-        count( $old_fsc_transient['data'] ) == 0 ) {
+        ! array_key_exists( 'plugins', $old_fsc_transient ) ||
+        count( $old_fsc_transient['plugins'] ) == 0 ) {
         return;
     }
 
@@ -49,7 +52,7 @@ function fsc_daily_event() {
     $new_plugins = false;
 
     foreach( $plugins as $name => $plugin ) {
-        if( ! array_key_exists( $name, $old_fsc_transient['data'] ) ) {
+        if( ! array_key_exists( $name, $old_fsc_transient['plugins'] ) ) {
             $new_plugins[] = $name;
         }
     }
@@ -58,8 +61,8 @@ function fsc_daily_event() {
     $status_changed = false;
 
     foreach( $plugins as $name => $plugin ) {
-        if( array_key_exists( $name, $old_fsc_transient['data'] ) && $old_fsc_transient['data'][$name]['status'] != $new_fsc_transient['data'][$name]['status'] ) {
-            $status_changed[$name] = $new_fsc_transient['data'][$name]['status'];
+        if( array_key_exists( $name, $old_fsc_transient['plugins'] ) && $old_fsc_transient['plugins'][$name]['status'] != $new_fsc_transient['plugins'][$name]['status'] ) {
+            $status_changed[$name] = $new_fsc_transient['plugins'][$name]['status'];
         }
     }
 
@@ -84,7 +87,7 @@ function fsc_daily_event() {
         if( is_array( $new_plugins ) ) {
             $message .= __( 'New plugins', 'feature-status-check' ) . ":\r\n";
             foreach( $new_plugins as $name ) {
-                $message .= "\t* " . $plugins[$name]['Name'] . ' (' . fsc_pretty_status( $new_fsc_transient['data'][$name]['status'] ) . ')' . "\r\n";
+                $message .= "\t* " . $plugins[$name]['Name'] . ' (' . fsc_pretty_status( $new_fsc_transient['plugins'][$name]['status'] ) . ')' . "\r\n";
             }
         }
 
@@ -180,6 +183,20 @@ function fsc_pretty_status( $status ) {
     }
 
     return $friendly_status;
+}
+
+// Make the status look human readable.
+function fsc_pretty_version( $version ) {
+    // Make the status more friendly.
+    switch( $version ) {
+        case 'na':
+            $friendly_version = __( 'N/A', 'feature-status-check' );
+            break;
+        default:
+            $friendly_version = $version;
+    }
+
+    return $friendly_version;
 }
 
 // Add us to the settings menu.
