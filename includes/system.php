@@ -13,7 +13,7 @@ function fsc_activation() {
 
 // Runs on de-activation to remove the cron job.
 function fsc_deactivation() {
-	$timestamp = wp_next_scheduled( 'fsc_daily_event' );
+    $timestamp = wp_next_scheduled( 'fsc_daily_event' );
 
     wp_unschedule_event( $timestamp, 'fsc_daily_event' );
 }
@@ -112,17 +112,18 @@ function fsc_daily_event() {
 
 // Add our menu item.
 function fsc_admin_menu() {
-	add_submenu_page( 'themes.php', 'Feature Status Check', 'Status Check', 'install_themes', 'fsc_admin_menu', 'fsc_display' );
-    	add_submenu_page( 'plugins.php', 'Feature Status Check', 'Status Check', 'install_plugins', 'fsc_admin_menu', 'fsc_display' );
+    add_submenu_page( 'themes.php', 'Feature Status Check', 'Status Check', 'install_themes', 'fsc_admin_appearance_menu', 'fsc_display' );
+    add_submenu_page( 'plugins.php', 'Feature Status Check', 'Status Check', 'install_plugins', 'fsc_admin_plugins_menu', 'fsc_display' );
 }
 
 function fsc_css_and_js( $hook ) {
- 	$current_screen = get_current_screen();
+    $current_screen = get_current_screen();
 
- 	// If we're not on the phc admin screen, don't enqueue anything.
-    if( strpos($current_screen->base, 'fsc_admin_menu') === false &&        // The Plugins->Status Check page.
-        strpos($current_screen->base, 'site-health') === false &&           // The Site Health Page.
-        strpos($current_screen->base, 'feature-status-check') === false ) {  // The Feature Status Check Settings page.
+    // If we're not on the phc admin screen, don't enqueue anything.
+    if( strpos($current_screen->base, 'fsc_admin_plugins_menu') === false &&        // The Plugins->Status Check page.
+        strpos($current_screen->base, 'fsc_admin_appearance_menu') === false &&     // The Appearance->Status Check Page.
+        strpos($current_screen->base, 'site-health') === false &&                   // The Site Health Page.
+        strpos($current_screen->base, 'feature-status-check') === false ) {         // The Feature Status Check Settings page.
         return;
     }
 
@@ -131,15 +132,15 @@ function fsc_css_and_js( $hook ) {
     wp_enqueue_script('jquery-ui-core');
     wp_enqueue_script('jquery-ui-tabs');
 
-	// Enqueue our css.
-	wp_enqueue_style( 'phc-css', plugins_url( 'css/fsc.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
+    // Enqueue our css.
+    wp_enqueue_style( 'phc-css', plugins_url( 'css/fsc.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
     wp_enqueue_style( 'jquery-ui-1.10.4.custom', plugins_url( 'css/jquery-ui-1.10.4.custom.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
     wp_enqueue_style( 'jquery-ui-tabs', plugins_url( 'css/jquery-ui-tabs.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
 
 
-	// Load the table sorter from https://github.com/tofsjonas/sortable
-	wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
-	wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
+    // Load the table sorter from https://github.com/tofsjonas/sortable
+    wp_enqueue_style( 'phc-sortable', plugins_url( 'css/sortable-base.min.css', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
+    wp_enqueue_script( 'phc-sortable', plugins_url( 'js/sortable.js', FSC_PLUGIN_FILE ), array(), FSC_VERSION );
 }
 
 // Gets the slug for a given plugin name.
