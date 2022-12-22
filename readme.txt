@@ -2,22 +2,22 @@
 Contributors: GregRoss
 Feature URI: http://toolstack.com/feature-status-check
 Author URI: http://toolstack.com
-Tags: admin plugins status
+Tags: admin plugins themes status
 Requires at least: 5.2
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2
 
-Checks to see if the plugins you have on your site are still supported in the plugin directory.
+Checks to see if the plugins and themes you have on your site are still supported in the WordPress directories.
 
 == Description ==
 
-Feature status can be a hard thing to manage in your WordPress installation, sometimes plugins get abandoned, or closed for security reasons and you have no way of knowing without visiting the plugin page.
+Feature status can be a hard thing to manage in your WordPress installation, sometimes plugins or themes get abandoned, or closed for security reasons and you have no way of knowing without visiting the WordPress feature page.
 
-Feature Status Check gives you a unified dashboard to view the status of all your installed plugins, and highlights those that might have issues.
+Feature Status Check gives you a unified dashboard to view the status of all your installed plugins and themes, and highlights those that might have issues.
 
-Feature Status Check also integrates with the WordPress site Health feature and highlights those plugins with possible issues.
+Feature Status Check also integrates with the WordPress Site Health feature and highlights those features with possible issues.
 
 Finally, Feature Status Check also send out a change report to the site admin during the daily update via e-mail.
 
@@ -35,9 +35,9 @@ This code is released under the GPL v2, see license.txt for details.
 
 Feature Status Check has three pages you can visit:
 
-1. The main plugin page can be found in the WordPress admin under Features, titled "Status Check".
+1. The main plugin page can be found in the WordPress admin under either Plugins or Appearance, titled "Status Check".
 2. It integrates with the Site Health page which can be found in the WordPress admin under Tools, Site Health.  Feature Status Check will add notices to the Status tab for issues it finds, as well as adding a new tab call "Feature Status" that you can view the complete details on.
-3. The settings page can be found in the WordPress admin under Settingss, titled "Feature Status Check".
+3. The settings page can be found in the WordPress admin under Settings, titled "Feature Status Check".
 
 = The plugin page seems to freeze for a long time when I manually update the data, what's going on? =
 
@@ -54,9 +54,9 @@ By default, Feature Status Check sets up a daily cron job to cache this data so 
 * **Temporarily Closed** means the plugin is temporarily available for download from the wordpress.org plugin directory.  This is often due to a security issue or a violation of the community standards.  How long the plugin will remain in this state has a couple of factors to it, but in general no longer than 60 days.
 * **Closed** means the plugin is permanently closed.
 
-= I've updated/removed a plugin, why hasn't it changed in the report? =
+= I've updated a plugin, why hasn't it changed in the report? =
 
-To keep the traffic to wordpress.org to a minimum, the plugin will only update the data daily.  If you want to update the data manually, can do do so through the settings or at the bottom of the Status Check menu under Plugins.
+To keep the traffic to wordpress.org to a minimum, the plugin will only update the data daily.  If you want to update the data manually, you can do so through the settings page or at the bottom of the Status Check menu under Plugins/Appearance.
 
 == Screenshots ==
 
@@ -65,6 +65,12 @@ To keep the traffic to wordpress.org to a minimum, the plugin will only update t
 3. Settings page.
 
 == Changelog ==
+
+= 1.2 =
+
+* Release date: TBD
+* Add theme support
+* Fix sorting of "Last Update" column.
 
 = 1.1 =
 
@@ -78,8 +84,8 @@ To keep the traffic to wordpress.org to a minimum, the plugin will only update t
 
 == Upgrade Notice ==
 
-None at this time.
+Theme support has required new data to be stored, so the cached data will be reset after install.  You may have to manually update the data if you do not wish to wait for the cron job to run.
 
 == Roadmap ==
 
-* Add theme status check support.
+* None at this time.
