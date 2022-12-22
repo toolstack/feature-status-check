@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Feature Status Check
-Version: 1.1
+Version: 1.2
 Plugin URI: http://toolstack.com/feature-status-check
 Author: Greg Ross
 Author URI: http://toolstack.com
@@ -16,7 +16,7 @@ Copyright (c) 2022 by Greg Ross
 This software is released under the GPL v2.0, see license.txt for details
 */
 
-DEFINE( 'FSC_VERSION', '1.0' );
+DEFINE( 'FSC_VERSION', '1.2' );
 DEFINE( 'FSC_PLUGIN_FILE', __FILE__ );
 
 require_once( 'includes/system.php' );
