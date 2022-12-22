@@ -74,7 +74,7 @@ function fsc_get_status_transient( $plugins, $themes, $no_update = false ) {
 	$new_themes = false;
 	foreach( $themes as $name => $theme ) {
 		if( ! array_key_exists( $name, $fsc_wp_org_themes_status ) ) {
-			$fsc_wp_org_themes_status[$name] = fsc_get_theme_status( $name, $plugin['Version'] );
+			$fsc_wp_org_themes_status[$name] = fsc_get_theme_status( $name, $theme->get('Version') );
 			$new_themes = true;
 		}
 	}
@@ -135,7 +135,7 @@ function fsc_get_plugin_status( $slug, $version ) {
 
 	if( ! is_wp_error( $wp_plugin_info ) ) {
 		// Setup some default values.
-		$result = array( 'status' => 'up_to_date', 'latest_version' => 'unknown', 'last_updated' => 'recently', 'tested_up_to' => '6.1.1' );
+		$result = array( 'status' => 'up_to_date', 'latest_version' => 'unknown', 'last_updated' => 'recently', 'last_updated_days' => 99999, 'tested_up_to' => '6.1.1' );
 
 		// Get the last update date.
 		$result['last_updated'] = $wp_plugin_info->last_updated;
@@ -154,6 +154,9 @@ function fsc_get_plugin_status( $slug, $version ) {
 		$elapsed_days = round( $elapsed_time / 86400, 0, PHP_ROUND_HALF_DOWN );
 		$elapsed_months = round( $elapsed_time / ( 86400 * 30 ), 0, PHP_ROUND_HALF_DOWN );
 		$elapsed_years = round( $elapsed_time / ( 86400 * 30 * 12 ), 0, PHP_ROUND_HALF_DOWN );
+
+		// Store the number of days since the last update.
+		$result['last_updated_days'] = $elapsed_days;
 
 		// Check to see if the plugin hasn't been tested recently.
 		if( $elapsed_years > 2 )  {
@@ -218,13 +221,14 @@ function fsc_get_theme_status( $slug, $version ) {
 								'is_community' => false,
 								'exteernal_repository_url' => false,
 								'can_configure_categorization_options' => false,
+								'last_updated' => true,
 							);
 
 	$wp_theme_info = themes_api( 'theme_information', array( 'slug' => $slug, 'fields' => $included_fields ) );
 
 	if( ! is_wp_error( $wp_theme_info ) ) {
 		// Setup some default values.
-		$result = array( 'status' => 'up_to_date', 'latest_version' => 'unknown', 'last_updated' => 'recently', 'tested_up_to' => 'na' );
+		$result = array( 'status' => 'up_to_date', 'latest_version' => 'unknown', 'last_updated' => 'recently', 'last_updated_days' => 99999, 'tested_up_to' => 'na' );
 
 		// Get the last update date.
 		$result['last_updated'] = $wp_theme_info->last_updated;
@@ -243,6 +247,9 @@ function fsc_get_theme_status( $slug, $version ) {
 		$elapsed_days = round( $elapsed_time / 86400, 0, PHP_ROUND_HALF_DOWN );
 		$elapsed_months = round( $elapsed_time / ( 86400 * 30 ), 0, PHP_ROUND_HALF_DOWN );
 		$elapsed_years = round( $elapsed_time / ( 86400 * 30 * 12 ), 0, PHP_ROUND_HALF_DOWN );
+
+		// Store the number of days since the last update.
+		$result['last_updated_days'] = $elapsed_days;
 
 		// Check to see if the plugin hasn't been tested recently.
 		if( $elapsed_years > 2 )  {
@@ -275,7 +282,7 @@ function fsc_get_theme_status( $slug, $version ) {
 function fsc_parse_wporg_page( $url ) {
 	$wp_org_page = file_get_contents( $url );
 
-	$result = array( 'status' => 'unknown', 'latest_version' => 'unknown', 'last_updated' => 'never', 'tested_up_to' => 'na' );
+	$result = array( 'status' => 'unknown', 'latest_version' => 'unknown', 'last_updated' => 'never', 'last_updated_days' => 99999, 'tested_up_to' => 'na' );
 
 	if( $wp_org_page === false || str_contains( $wp_org_page, 'Nothing Found' ) || str_contains( $wp_org_page, 'Showing results for' ) ) {
 		$result['status'] = 'not_found';
@@ -286,9 +293,14 @@ function fsc_parse_wporg_page( $url ) {
 		}
 
 		// Get the last update date.
-		$split = preg_split('/Last updated: <strong><span>/', $wp_org_page );
-		$split = preg_split('/<\/span>/', $split[1] );
-		if( $split !== false ) { $result['last_updated'] = $split[0]; }
+		$split = preg_split('/Last updated: <strong>/', $wp_org_page );
+		$split = preg_split('/<\/strong>/', $split[1] );
+		if( $split !== false ) {
+			// Some pages will have a span around the last update string, strip that out if it exists.
+			$split[0] = str_replace( '<span>', '', $split[0] );
+			$split[0] = str_replace( '</span>', '', $split[0] );
+			$result['last_updated'] = $split[0];
+		}
 
 		// Get the last version of WP that was tested.
 		$split = preg_split('/Tested up to: <strong>/', $wp_org_page );
@@ -312,6 +324,30 @@ function fsc_parse_wporg_page( $url ) {
 		// Check to see if the plugin has been closed temporarily.
 		if( str_contains( $wp_org_page, 'closure is temporary' ) ) {
 			$result['status'] = "temp_closed";
+		}
+
+		// Let's converted the last updated string to a number of days.
+		$lu_int = intval( $result['last_updated'] );
+
+		// Convert the string to lower case, just in case.
+		$lu_lower = strtolower( $result['last_updated'] );
+
+		// Now let's see what time frame we're dealing with.
+		if( str_contains( $lu_lower, 'year' ) ) {
+			// Years?
+			$result['last_updated_days'] = $lu_int * 365;
+		} else if( str_contains( $lu_lower, 'month' ) ) {
+			// Months?
+			$result['last_updated_days'] = $lu_int * 30;
+		} else if( str_contains( $lu_lower, 'day' ) ) {
+			// Days?
+			$result['last_updated_days'] = $lu_int;
+		} else {
+			// We didn't find anything so assume it's a real date string.
+			$elapsed_time = time() - strtotime( $result['last_updated'] );
+			$elapsed_days = round( $elapsed_time / 86400, 0, PHP_ROUND_HALF_DOWN );
+
+			$result['last_updated_days'] = $elapsed_days;
 		}
 	}
 

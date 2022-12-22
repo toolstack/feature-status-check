@@ -79,14 +79,8 @@ function fsc_display( $no_update = false, $no_title = false ) {
 		// Get the active theme.
 		$active_theme = get_option( 'stylesheet' );
 
-		echo '<script>' . PHP_EOL;
-		echo 'window.addEventListener(\'load\', function () { ' . PHP_EOL;
-		echo '  const el = document.getElementById(\'fsc_feature_name\')' . PHP_EOL;
-    		echo '  if (el) {' . PHP_EOL;
-	      	echo '    el.click()' . PHP_EOL;
-    		echo '  }' . PHP_EOL;
-  		echo '})' . PHP_EOL;
-		echo '</script>' . PHP_EOL;
+		// Setup an output variable for the table.
+		$rows = array();
 
 		// Setup the table, including the sortable flags.
 		echo '<table class="fsc_table sortable asc" id="fsc_table">' . PHP_EOL;
@@ -100,7 +94,8 @@ function fsc_display( $no_update = false, $no_title = false ) {
 		echo '<th id="fsc_feature_author">' . __( 'Plugin Author', 'feature-status-check' ) . '</th>';
 		echo '<th id="fsc_feature_home_page" class="no-sort">' . __( 'Home Page', 'feature-status-check' ) . '</th>';
 		echo '<th id="fsc_feature_status" class="fsc_table_cell_center_align">' . __( 'Status', 'feature-status-check' ) . '</th>';
-		echo '<th id="fsc_feature_last_update" class="fsc_table_cell_center_align">' . __( 'Last Update', 'feature-status-check' ) . '</th>';
+		echo '<th id="fsc_feature_last_update" data-sort-col="8" class="fsc_table_cell_center_align">' . __( 'Last Update', 'feature-status-check' ) . '</th>';
+		echo '<th id="fsc_feature_last_update_days" class="fsc_table_cell_hidden">' . __( 'Last Update Days', 'feature-status-check' ) . '</th>';
 		echo '<th id="fsc_feature_tested_up_to" class="fsc_table_cell_center_align">' . __( 'Tested up to', 'feature-status-check' ) . '</th>';
 		echo '</thead>' . PHP_EOL;
 
@@ -135,18 +130,22 @@ function fsc_display( $no_update = false, $no_title = false ) {
 			// Check to see if this plugin is actually active on the site.
 			$plugin_active = in_array( $name, $active_plugins ) ? 'Yes' : '';
 
+			// Create a rowkey to use in lowercase so the ksort later works correctly.
+			$row_key = strtolower( $plugin['Name'] );
+
 			// Now output the table row.
-			echo '<tr>';
-			echo '<td>' . $plugin_link . '</td>';
-			echo '<td>' . __( 'plugin', 'feature-status-check' ) . '</td>';
-			echo '<td' . $version_class . '>' . esc_html( $plugin['Version'] ) . '</td>';
-			echo '<td class="fsc_table_cell_center_align">' . $plugin_active . '</td>';
-			echo '<td>' . $plugin_author . '</td>';
-			echo '<td class="fsc_table_cell_center_align"><a target="_blank" href="' . esc_attr( $plugin['PluginURI'] ) . '">link</a></td>';
-			echo '<td class="fsc_table_cell_center_align ' . $status_class . '">' . $friendly_status . '</td>';
-			echo '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( $fsc_wp_org_plugins_status[$name]['last_updated'] ) . '</td>';
-			echo '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( fsc_pretty_version( $fsc_wp_org_plugins_status[$name]['tested_up_to'] ) ). '</td>';
-			echo '</tr>' . PHP_EOL;
+			$rows[$row_key] = '<tr>';
+			$rows[$row_key] .= '<td>' . $plugin_link . '</td>';
+			$rows[$row_key] .= '<td>' . __( 'plugin', 'feature-status-check' ) . '</td>';
+			$rows[$row_key] .= '<td' . $version_class . '>' . esc_html( $plugin['Version'] ) . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align">' . $plugin_active . '</td>';
+			$rows[$row_key] .= '<td>' . $plugin_author . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align"><a target="_blank" href="' . esc_attr( $plugin['PluginURI'] ) . '">link</a></td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align ' . $status_class . '">' . $friendly_status . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( $fsc_wp_org_plugins_status[$name]['last_updated'] ) . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_hidden">' . esc_html( $fsc_wp_org_plugins_status[$name]['last_updated_days'] ) . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( fsc_pretty_version( $fsc_wp_org_plugins_status[$name]['tested_up_to'] ) ). '</td>';
+			$rows[$row_key] .= '</tr>';
 
 		}
 
@@ -181,20 +180,29 @@ function fsc_display( $no_update = false, $no_title = false ) {
 			// Check to see if this plugin is actually active on the site.
 			$theme_active = $name == $active_theme ? 'Yes' : '';
 
-			// Now output the table row.
-			echo '<tr>';
-			echo '<td>' . $theme_link . '</td>';
-			echo '<td>' . __( 'theme', 'feature-status-check' ) . '</td>';
-			echo '<td' . $version_class . '>' . esc_html( $theme->get('Version') ) . '</td>';
-			echo '<td class="fsc_table_cell_center_align">' . $theme_active . '</td>';
-			echo '<td>' . $theme_author . '</td>';
-			echo '<td class="fsc_table_cell_center_align"><a target="_blank" href="' . esc_attr( $theme->get('ThemeURI') ) . '">link</a></td>';
-			echo '<td class="fsc_table_cell_center_align ' . $status_class . '">' . $friendly_status . '</td>';
-			echo '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( $fsc_wp_org_themes_status[$name]['last_updated'] ) . '</td>';
-			echo '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( fsc_pretty_version( $fsc_wp_org_themes_status[$name]['tested_up_to'] ) ) . '</td>';
-			echo '</tr>' . PHP_EOL;
+			// Create a rowkey to use in lowercase so the ksort later works correctly.
+			$row_key = strtolower( $theme->get('Name') );
 
+			// Now output the table row.
+			$rows[$row_key] = '<tr>';
+			$rows[$row_key] .= '<td>' . $theme_link . '</td>';
+			$rows[$row_key] .= '<td>' . __( 'theme', 'feature-status-check' ) . '</td>';
+			$rows[$row_key] .= '<td' . $version_class . '>' . esc_html( $theme->get('Version') ) . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align">' . $theme_active . '</td>';
+			$rows[$row_key] .= '<td>' . $theme_author . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align"><a target="_blank" href="' . esc_attr( $theme->get('ThemeURI') ) . '">link</a></td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align ' . $status_class . '">' . $friendly_status . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( $fsc_wp_org_themes_status[$name]['last_updated'] ) . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_hidden">' . esc_html( $fsc_wp_org_themes_status[$name]['last_updated_days'] ) . '</td>';
+			$rows[$row_key] .= '<td class="fsc_table_cell_center_align ' . $status_class . '">' . esc_html( fsc_pretty_version( $fsc_wp_org_themes_status[$name]['tested_up_to'] ) ) . '</td>';
+			$rows[$row_key] .= '</tr>';
 		}
+
+		// Sort the rows by key name.
+		ksort( $rows );
+
+		// Output the sorted rows.
+		echo implode( PHP_EOL, $rows );
 
 		// Close the table.
 		echo '</table>' . PHP_EOL;
