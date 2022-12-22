@@ -24,8 +24,12 @@
 }
 
 .fsc_table tr:nth-child(even) {
-            background-color: white;
-        }
+    background-color: white;
+}
+
+.fsc_table_cell_hidden {
+    display: none;
+}
 
 .fsc_status_up_to_date {
     background-color: green;
