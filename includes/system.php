@@ -112,7 +112,8 @@ function fsc_daily_event() {
 
 // Add our menu item.
 function fsc_admin_menu() {
-	add_submenu_page( 'plugins.php', 'Feature Status Check', 'Status Check', 'install_plugins', 'fsc_admin_menu', 'fsc_display' );
+	add_submenu_page( 'themes.php', 'Feature Status Check', 'Status Check', 'install_themes', 'fsc_admin_menu', 'fsc_display' );
+    	add_submenu_page( 'plugins.php', 'Feature Status Check', 'Status Check', 'install_plugins', 'fsc_admin_menu', 'fsc_display' );
 }
 
 function fsc_css_and_js( $hook ) {

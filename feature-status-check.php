@@ -25,8 +25,8 @@ require_once( 'includes/admin-page.php' );
 require_once( 'includes/settings-page.php' );
 require_once( 'includes/site-health.php' );
 
-// Add our menu item to the plugins menu.
-add_action( 'admin_menu', 'fsc_admin_menu' );
+// Add our menu item to the plugins/appearance menu.
+add_action( 'admin_menu', 'fsc_admin_menu', 200 );
 
 // Adds the options page to the settings menu.
 add_action( 'admin_menu', 'fsc_add_options_page' );
