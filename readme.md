@@ -74,7 +74,7 @@ To keep the traffic to wordpress.org to a minimum, the plugin will only update t
 
 ### 1.2 ###
 
-* Release date: TBD
+* Release date: Dec 21, 2022
 * Add theme support
 * Fix sorting of "Last Update" column.
 
