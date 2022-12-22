@@ -17,8 +17,8 @@ function fsc_add_plugin_status_test( $tests ) {
 
 // Run our site status test.
 function fsc_status_test() {
-	// The URLs for wordpress directories.
-	$wp_plugin_url = 'https://wordpress.org/plugins/';
+    // The URLs for wordpress directories.
+    $wp_plugin_url = 'https://wordpress.org/plugins/';
     $wp_theme_url = 'https://wordpress.org/themes/';
 
     // Grab the installed plugin list, used later to make things look pretty for the end user.
@@ -27,10 +27,10 @@ function fsc_status_test() {
     // Grab the install plugin list, used later to make things look pretty for the end user.
     $themes = wp_get_themes();
 
-	// Grabbed the cached data, don't update it at this time as it takes too long.
-	$fsc_transient = fsc_get_status_transient( $plugins, $themes, true );
+    // Grabbed the cached data, don't update it at this time as it takes too long.
+    $fsc_transient = fsc_get_status_transient( $plugins, $themes, true );
 
-	// Setup the default result.
+    // Setup the default result.
     $result = array(
         'label'       => __( 'Feature status check passed', 'feature-status-check' ),
         'status'      => 'good',
@@ -66,8 +66,8 @@ function fsc_status_test() {
     }
 
     // Setup some arrays to store the untested/closed/temp_closed plugins that we find.
-    $untested 	 = array();
-    $closed 	 = array();
+    $untested      = array();
+    $closed      = array();
     $temp_closed = array();
 
     // Loop through the transient data one plugin at a time and filter them out by status.
@@ -76,20 +76,20 @@ function fsc_status_test() {
         $slug = fsc_get_plugin_slug( $name );
         $nice_name = $plugins[$name]['Name'];
 
-    	switch( $plugin['status'] ) {
-    		case 'untested':
-	    		$untested[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
+        switch( $plugin['status'] ) {
+            case 'untested':
+                $untested[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
 
-    			break;
-    		case 'closed':
-	    		$closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
+                break;
+            case 'closed':
+                $closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
 
-    			break;
-    		case 'temp_closed':
-	    		$temp_closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
+                break;
+            case 'temp_closed':
+                $temp_closed[$nice_name] = '<a target="_blank" href="' . esc_attr( $wp_plugin_url . $slug ) . '">' . esc_html( $nice_name ) . '</a>';
 
-    			break;
-    	}
+                break;
+        }
     }
 
     // Loop through the transient data one theme at a time and filter them out by status.
@@ -118,8 +118,8 @@ function fsc_status_test() {
     ksort( $temp_closed );
 
     // Create an unordered list for each status time.
-    $ul_untested  	= count( $untested ) == 0 ? '' : '<h2 class="fsc_site_health_untested">' . __( 'Plugins untested in over 3 years', 'feature-status-check' ) . ':</h2><ul><li>' . implode( '</li><li>', $untested ) . '</li></ul>';
-    $ul_closed 		= count( $closed ) == 0 ? '' : '<h2 class="fsc_site_health_closed">' . __( 'Plugins permanently closed on wordpress.org', 'feature-status-check' ) . ':</h2><ul><li>' . implode( '</li><li>', $closed ) . '</li></ul>';
+    $ul_untested      = count( $untested ) == 0 ? '' : '<h2 class="fsc_site_health_untested">' . __( 'Plugins untested in over 3 years', 'feature-status-check' ) . ':</h2><ul><li>' . implode( '</li><li>', $untested ) . '</li></ul>';
+    $ul_closed         = count( $closed ) == 0 ? '' : '<h2 class="fsc_site_health_closed">' . __( 'Plugins permanently closed on wordpress.org', 'feature-status-check' ) . ':</h2><ul><li>' . implode( '</li><li>', $closed ) . '</li></ul>';
     $ul_temp_closed = count( $temp_closed ) == 0 ? '' : '<h2 class="fsc_site_health_temp_closed">' . __( 'Plugins temporarily closed on wordpress.org', 'feature-status-check' ) . ':</h2><ul><li>' . implode( '</li><li>', $temp_closed ) . '</li></ul>';
 
     // If we have closed/temp_closed items, mark the test critical and red.
