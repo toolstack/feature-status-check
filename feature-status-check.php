@@ -16,7 +16,7 @@ Copyright (c) 2022 by Greg Ross
 This software is released under the GPL v2.0, see license.txt for details
 */
 
-DEFINE( 'FSC_VERSION', '1.2' );
+DEFINE( 'FSC_VERSION', '1.3' );
 DEFINE( 'FSC_PLUGIN_FILE', __FILE__ );
 
 require_once( 'includes/system.php' );
