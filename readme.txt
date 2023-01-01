@@ -66,6 +66,10 @@ To keep the traffic to wordpress.org to a minimum, the plugin will only update t
 
 == Changelog ==
 
+= 1.3 =
+* Release date: Jan 1, 2023
+* Fix manual update button on the status page.
+
 = 1.2 =
 
 * Release date: Dec 21, 2022
