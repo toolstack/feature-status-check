@@ -220,7 +220,7 @@ function fsc_display( $no_update = false, $no_title = false ) {
     // Only display the manual update option if updates are enabled.
     if( $no_update == false ) {
         // Create a form to submit a manual data update request.
-        echo '<form action="' . esc_url( admin_url( 'plugins.php?page=fsc_admin_menu' ) ) . '" method="post">' . PHP_EOL;
+        echo '<form method="post">' . PHP_EOL;
         echo '<input type="hidden" name="fsc_data_update" value="true">' . PHP_EOL;
         submit_button( __( 'Manual Data Update', 'feature-status-check' ) ) . PHP_EOL;
         echo '<span>' . __( '(updating the data may take a long time if you have a significant number of plugins, be patient and wait for the page to complete its loading)', 'feature-status-check' ) . '</span>' . PHP_EOL;
