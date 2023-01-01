@@ -6,7 +6,7 @@
 **Requires at least:** 5.2  
 **Tested up to:** 6.1.1  
 **Requires PHP:** 7.0  
-**Stable tag:** 1.2  
+**Stable tag:** 1.3  
 **License:** GPLv2  
 
 Checks to see if the plugins and themes you have on your site are still supported in the WordPress directories.
