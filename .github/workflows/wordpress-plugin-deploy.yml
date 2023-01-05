@@ -15,13 +15,13 @@ jobs:
       with:
         generate-zip: true
       env:
+        ASSETS_DIR: assets
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ASSETS_DIR: assets
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ${{ steps.deploy.outputs.zip-path }}
