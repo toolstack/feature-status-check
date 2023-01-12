@@ -280,9 +280,19 @@ function fsc_get_theme_status( $slug, $version ) {
 }
 
 function fsc_parse_wporg_page( $url ) {
-    $wp_org_page = file_get_contents( $url );
-
     $result = array( 'status' => 'unknown', 'latest_version' => 'unknown', 'last_updated' => 'never', 'last_updated_days' => 99999, 'tested_up_to' => 'na' );
+
+    // Get the response from the webpate.
+    $response = wp_remote_get( $url );
+
+    // If it was an error, just return the defaults.
+    if( is_wp_error( $response ) ) { return $result; }
+
+    // If it isn't an array, or teh body isn't set for some reason, just return the defaults.
+    if( ! is_array( $response ) || !array_key_exists( 'body', $response ) ) { return $result; }
+
+    // Ok, now actually get the body and process it.
+    $wp_org_page = $response['body'];
 
     if( $wp_org_page === false || str_contains( $wp_org_page, 'Nothing Found' ) || str_contains( $wp_org_page, 'Showing results for' ) ) {
         $result['status'] = 'not_found';
