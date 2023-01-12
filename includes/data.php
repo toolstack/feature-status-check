@@ -191,7 +191,7 @@ function fsc_get_theme_status( $slug, $version ) {
     require_once( ABSPATH . 'wp-admin/includes/theme.php' );
 
     // Make sure we use an english variant of the wordpress plugin directory.
-    $wp_url = 'https://en-ca.wordpress.org/plugins/';
+    $wp_url = 'https://en-ca.wordpress.org/themes/';
 
     // List of fields to exclude from the WP api query.
     $included_fields = array(
