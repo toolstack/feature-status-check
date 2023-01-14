@@ -1,22 +1,22 @@
 <?php
 /*
 Plugin Name: Feature Status Check
-Version: 1.3
+Version: 1.4
 Plugin URI: http://toolstack.com/feature-status-check
 Author: Greg Ross
 Author URI: http://toolstack.com
 Description: Checks to see if the plugins you have on your site are still supported in the plugin directory.
 
-Compatible with WordPress 3.5+.
+Compatible with WordPress 5+.
 
 Read the accompanying readme.txt file for instructions and documentation.
 
-Copyright (c) 2022 by Greg Ross
+Copyright (c) 2022-23 by Greg Ross
 
 This software is released under the GPL v2.0, see license.txt for details
 */
 
-DEFINE( 'FSC_VERSION', '1.3' );
+DEFINE( 'FSC_VERSION', '1.4' );
 DEFINE( 'FSC_PLUGIN_FILE', __FILE__ );
 
 require_once( 'includes/system.php' );

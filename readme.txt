@@ -6,7 +6,7 @@ Tags: admin plugins themes status
 Requires at least: 5.2
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv2
 
 Checks to see if the plugins and themes you have on your site are still supported in the WordPress directories.
@@ -65,6 +65,10 @@ To keep the traffic to wordpress.org to a minimum, the plugin will only update t
 3. Settings page.
 
 == Changelog ==
+
+= 1.4 =
+* Release date: Jan 14, 2023
+* Replaced file_get_contents() with wp_remote_get() for better site compatibility.
 
 = 1.3 =
 * Release date: Jan 1, 2023
